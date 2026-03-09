@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>The Clarity Code Quiz | Midlife Recalibrated</title>
+  <meta name="description" content="Discover your Clarity Code — a character-based identity quiz for high-achieving midlife women navigating career and life transitions in an AI-driven world.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=DM+Sans:wght@400;500;700&family=Poppins:wght@400;600;700&family=Lora:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+  <!-- ============================================
+       LANDING PAGE
+       ============================================ -->
+  <div id="landing-view" class="view active">
+
+    <!-- Hero -->
+    <section class="landing-hero">
+      <div class="hero-badge">Midlife Recalibrated</div>
+      <h1>Find Your <span>Clarity Code</span></h1>
+      <p class="hero-subtitle">A quiz for high-achieving midlife women who know something needs to change — but aren't sure what's standing in the way. This isn't a personality test. It's a mirror.</p>
+      <button class="btn-primary" id="start-quiz-btn">Take the Quiz</button>
+      <p class="hero-note">16 reflective questions &middot; Takes about 5 minutes</p>
+    </section>
+
+    <!-- What You'll Discover -->
+    <section class="discover-section">
+      <div class="container">
+        <h2>What You'll Discover</h2>
+        <p class="section-subtitle">This quiz meets you exactly where you are — no judgment, no diagnosis. Just clarity.</p>
+        <div class="discover-grid">
+          <div class="discover-card">
+            <div class="card-emoji">&#x1F50D;</div>
+            <h3>Your Clarity Profile</h3>
+            <p>One of four character profiles that reflects who you are right now — not who you should be.</p>
+          </div>
+          <div class="discover-card">
+            <div class="card-emoji">&#x1F9E9;</div>
+            <h3>Your Capacity Blocks</h3>
+            <p>The protective patterns that are keeping you stuck — and why they're not character flaws.</p>
+          </div>
+          <div class="discover-card">
+            <div class="card-emoji">&#x1F5FA;</div>
+            <h3>Your MAP Position</h3>
+            <p>Where you sit on the Mindset &rarr; Aligned AI Strategy &rarr; Profitable Action framework.</p>
+          </div>
+          <div class="discover-card">
+            <div class="card-emoji">&#x1F4A1;</div>
+            <h3>3 Mini-Lessons</h3>
+            <p>Tailored coaching that blends mindset shifts with practical AI strategy — built for your profile.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- About Jess -->
+    <section class="about-section">
+      <div class="container">
+        <div class="about-label">About Your Guide</div>
+        <h2>Hi, I'm Jess.</h2>
+        <p>A few years ago, I was deep in corporate life, checking boxes, climbing invisible ladders, and slowly losing touch with what I actually wanted. I was also diving headfirst into the online business world — building chatbots, taking courses, testing every new AI tool that landed in my feed.</p>
+        <p>From the outside? It probably looked like hustle. From the inside? It was fragmentation dressed up as productivity.</p>
+        <p>So I stopped. I shut it all down. And I started asking different questions: How do we stay ambitious without completely frying our nervous systems? How do we use AI as a tool for building something real — instead of just another source of overwhelm?</p>
+        <p>I'm not a guru who has it all figured out. I'm a certified life and health coach, a practitioner who's doing the work, and a woman who learned the hard way that busy is not the same as productive, and stimulated is not the same as satisfied.</p>
+        <p>Today I help midlife women navigate the AI-driven world without losing themselves in it. Not by teaching them every tool. By helping them find their lane, build with focus, and use AI as the vehicle — not the destination.</p>
+        <p class="signature">— Jess, Midlife Recalibrated</p>
+      </div>
+    </section>
+
+    <!-- Bottom CTA -->
+    <section class="bottom-cta">
+      <div class="container">
+        <h2>Ready to See Yourself Clearly?</h2>
+        <p>This is you remembering, not becoming. The quiz takes about 5 minutes and the results might just change how you see everything.</p>
+        <button class="btn-primary" id="start-quiz-btn-2">Take the Quiz Now</button>
+      </div>
+    </section>
+
+  </div>
+
+  <!-- ============================================
+       QUIZ SECTION
+       ============================================ -->
+  <div id="quiz-view" class="view">
+    <section class="quiz-section">
+
+      <!-- Progress -->
+      <div class="quiz-progress-wrapper">
+        <div class="quiz-progress-top">
+          <span class="progress-label">The Clarity Code</span>
+          <span class="progress-count" id="progress-count">Question 1 of 16</span>
+        </div>
+        <div class="progress-bar-track">
+          <div class="progress-bar-fill" id="progress-bar"></div>
+        </div>
+      </div>
+
+      <!-- Question -->
+      <div class="quiz-question-wrapper">
+        <div class="quiz-question-container" id="question-container">
+          <!-- Dynamically populated -->
+        </div>
+      </div>
+
+    </section>
+  </div>
+
+  <!-- ============================================
+       RESULTS SECTION
+       ============================================ -->
+  <div id="results-view" class="view">
+    <section class="results-section">
+
+      <!-- Profile Hero -->
+      <div class="result-hero" id="result-hero">
+        <div class="result-emoji" id="result-emoji"></div>
+        <div class="result-badge">Your Clarity Code</div>
+        <h1 id="result-name"></h1>
+        <p class="result-opening-line" id="result-opening-line"></p>
+        <div class="blended-note" id="blended-note" style="display:none;"></div>
+      </div>
+
+      <!-- Result Content -->
+      <div class="result-content">
+
+        <!-- Core Identity -->
+        <div class="result-block fade-in-up">
+          <div class="result-block-label subheading" id="identity-label" style="color: var(--bright-pink);">Who You Are</div>
+          <h2>Your Core Identity</h2>
+          <div id="result-identity"></div>
+        </div>
+
+        <!-- Daily Reality -->
+        <div class="result-block fade-in-up">
+          <div class="result-block-label subheading" style="color: var(--bright-pink);">Your Daily Reality</div>
+          <div id="result-daily-reality"></div>
+        </div>
+
+        <!-- Inner Dialogue -->
+        <div class="result-block fade-in-up">
+          <div class="result-block-label subheading" style="color: var(--bright-pink);">The Voice In Your Head</div>
+          <h2>Your Inner Dialogue</h2>
+          <ul class="inner-dialogue-list" id="result-inner-dialogue"></ul>
+        </div>
+
+        <!-- AI Relationship -->
+        <div class="result-block fade-in-up">
+          <div class="result-block-label subheading" style="color: var(--bright-pink);">Your Relationship with AI</div>
+          <div id="result-ai-relationship"></div>
+        </div>
+
+        <!-- Capacity Blocks -->
+        <div class="result-block fade-in-up">
+          <div class="result-block-label subheading" style="color: var(--bright-pink);">What's Running the Show</div>
+          <h2>Your Capacity Blocks</h2>
+          <p style="margin-bottom: 20px; color: var(--text-light); font-size: 0.95rem;">These aren't character flaws — they're old programming. Protective patterns that once kept you safe but now keep you stuck.</p>
+          <div id="result-capacity-blocks"></div>
+        </div>
+
+        <!-- Secret Fear & Hope -->
+        <div class="result-block fade-in-up">
+          <div class="result-block-label subheading" style="color: var(--bright-pink);">Underneath It All</div>
+          <h2>Your Secret Fear</h2>
+          <p class="pull-quote" id="result-secret-fear"></p>
+          <h2 style="margin-top: 32px;">Your Secret Hope</h2>
+          <p class="pull-quote" id="result-secret-hope"></p>
+        </div>
+
+        <!-- MAP Position -->
+        <div class="result-block fade-in-up">
+          <div class="result-block-label subheading" style="color: var(--bright-pink);">Where You Are on the MAP</div>
+          <h2>Mindset &rarr; Aligned AI Strategy &rarr; Profitable Action</h2>
+          <div class="map-visual" id="map-visual"></div>
+          <p class="map-description" id="map-description"></p>
+        </div>
+
+        <!-- Mini-Lessons -->
+        <div class="result-block fade-in-up" style="background: transparent; box-shadow: none; padding: 0;">
+          <div class="result-block-label subheading" style="color: var(--bright-pink); padding: 0 4px;">Your 3 Mini-Lessons</div>
+          <h2 style="padding: 0 4px; margin-bottom: 20px;">Coaching Tailored to Your Profile</h2>
+          <div class="mini-lessons-section" id="mini-lessons-container"></div>
+        </div>
+
+        <!-- Next Step -->
+        <div class="next-step-section fade-in-up">
+          <h2>Your Next Step</h2>
+          <p id="result-next-step"></p>
+        </div>
+
+        <!-- CTA -->
+        <div class="results-cta fade-in-up">
+          <h2>Ready to Go Deeper?</h2>
+          <p class="cta-subtitle">Download the AI Without the Overwhelm guide — free. Stop collecting tools and start building.</p>
+          <form class="email-form" id="email-form">
+            <input type="email" placeholder="Your email address" required>
+            <button type="submit">Get the Guide</button>
+          </form>
+          <div class="cta-community">
+            <p>Want ongoing support from women who get it?</p>
+            <a href="#">Join the Midlife Recalibrated Community &rarr;</a>
+          </div>
+        </div>
+
+        <!-- Share -->
+        <div class="share-section">
+          <p>Know a woman who needs to hear this? Share your result.</p>
+          <div class="share-buttons">
+            <button class="share-btn" id="share-copy">Copy Link</button>
+            <button class="share-btn" id="share-native">Share</button>
+          </div>
+        </div>
+
+        <!-- Retake -->
+        <div class="retake-section">
+          <button class="retake-btn" id="retake-btn">Retake the Quiz</button>
+        </div>
+
+      </div>
+    </section>
+  </div>
+
+  <!-- Scripts -->
+  <script src="questions.js"></script>
+  <script src="profiles.js"></script>
+  <script src="app.js"></script>
+
+</body>
+</html>
