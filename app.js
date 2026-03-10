@@ -73,6 +73,11 @@
     // Scroll to top of question on mobile
     window.scrollTo({ top: 0, behavior: 'instant' });
 
+    // Reset all button states — remove any lingering focus/hover
+    questionContainer.querySelectorAll('.answer-btn').forEach(btn => {
+      btn.blur();
+    });
+
     // Animate in
     questionContainer.style.opacity = '0';
     questionContainer.style.transform = 'translateY(16px)';
@@ -135,6 +140,8 @@
 
   function showResults() {
     const result = calculateResult();
+    // Save result so page refresh returns to results
+    sessionStorage.setItem('clarityCodeResult', JSON.stringify(result));
     renderResults(result);
     showView(resultsView);
   }
@@ -300,18 +307,6 @@
   document.getElementById('start-quiz-btn-2').addEventListener('click', startQuiz);
   document.getElementById('retake-btn').addEventListener('click', startQuiz);
 
-  // Email form (UI only)
-  document.getElementById('email-form').addEventListener('submit', function (e) {
-    e.preventDefault();
-    const input = this.querySelector('input');
-    const btn = this.querySelector('button');
-    btn.textContent = 'Thank you!';
-    btn.style.background = '#682e66';
-    btn.style.color = '#fff';
-    input.disabled = true;
-    btn.disabled = true;
-  });
-
   // Share buttons
   document.getElementById('share-copy').addEventListener('click', function () {
     navigator.clipboard.writeText(window.location.href).then(() => {
@@ -334,6 +329,157 @@
         setTimeout(() => { this.textContent = 'Share'; }, 2000);
       });
     }
+  });
+
+  // ============================================
+  // PDF DOWNLOAD
+  // ============================================
+
+  document.getElementById('download-pdf-btn').addEventListener('click', function () {
+    // Gather all the result content
+    const saved = sessionStorage.getItem('clarityCodeResult');
+    if (!saved) return;
+
+    const result = JSON.parse(saved);
+    const profile = profileData[result.primaryKey];
+
+    // Build a clean printable HTML document
+    const printHTML = `
+      <!DOCTYPE html>
+      <html>
+      <head>
+        <meta charset="UTF-8">
+        <title>My Clarity Code: ${profile.name}</title>
+        <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=DM+Sans:wght@400;500;700&family=Poppins:wght@400;600;700&family=Lora:wght@400;700&display=swap" rel="stylesheet">
+        <style>
+          * { margin: 0; padding: 0; box-sizing: border-box; }
+          body { font-family: 'DM Sans', sans-serif; color: #2a2a2a; line-height: 1.7; padding: 40px; max-width: 700px; margin: 0 auto; }
+          h1 { font-family: 'Playfair Display', serif; font-size: 2rem; color: ${profile.color}; margin-bottom: 8px; }
+          h2 { font-family: 'Playfair Display', serif; font-size: 1.4rem; color: #682e66; margin: 28px 0 12px; }
+          h3 { font-family: 'Poppins', sans-serif; font-weight: 600; font-size: 0.95rem; color: #682e66; margin: 16px 0 4px; }
+          p { margin-bottom: 12px; color: #555; }
+          .emoji { font-size: 2.5rem; margin-bottom: 8px; }
+          .badge { font-family: 'Poppins', sans-serif; font-weight: 600; font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.15em; color: #d155ae; margin-bottom: 4px; }
+          .opening { font-family: 'Lora', serif; font-style: italic; font-size: 1.1rem; color: #682e66; margin-bottom: 24px; }
+          .blended { background: rgba(104, 46, 102, 0.08); padding: 10px 16px; border-radius: 8px; font-size: 0.9rem; margin-bottom: 20px; display: inline-block; }
+          .section { margin: 24px 0; padding: 20px; background: #f9f8f5; border-radius: 10px; }
+          .section-label { font-family: 'Poppins', sans-serif; font-weight: 600; font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.12em; color: #d155ae; margin-bottom: 8px; }
+          .pull-quote { font-family: 'Lora', serif; font-style: italic; color: #682e66; border-left: 3px solid #d4af37; padding-left: 14px; margin: 12px 0; }
+          .dialogue-item { font-family: 'Lora', serif; font-style: italic; color: #682e66; padding: 6px 0; border-bottom: 1px solid rgba(104, 46, 102, 0.08); }
+          .block-item { padding: 12px 0; border-bottom: 1px solid #eee; }
+          .block-item:last-child { border-bottom: none; }
+          .map-text { text-align: center; font-family: 'Poppins', sans-serif; font-weight: 600; font-size: 0.85rem; color: #682e66; margin: 16px 0; }
+          .map-desc { text-align: center; font-family: 'Lora', serif; font-style: italic; color: #682e66; }
+          .lesson { margin: 16px 0; padding: 16px; background: #f9f8f5; border-radius: 8px; }
+          .lesson-number { font-family: 'Poppins', sans-serif; font-weight: 600; font-size: 0.65rem; text-transform: uppercase; letter-spacing: 0.12em; color: #d155ae; }
+          .lesson-title { font-family: 'Playfair Display', serif; font-size: 1.1rem; color: #682e66; margin: 4px 0 10px; }
+          .footer { margin-top: 40px; text-align: center; font-size: 0.85rem; color: #999; border-top: 1px solid #eee; padding-top: 20px; }
+          @media print { body { padding: 20px; } .section { break-inside: avoid; } }
+        </style>
+      </head>
+      <body>
+        <div class="emoji">${profile.emoji}</div>
+        <div class="badge">Your Clarity Code</div>
+        <h1>${profile.name}</h1>
+        <p class="opening">${profile.openingLine}</p>
+        ${result.isTied && result.secondaryKey ? `<div class="blended">You're ${profile.name} with ${profileData[result.secondaryKey].name} energy.</div>` : ''}
+
+        <div class="section">
+          <div class="section-label">Who You Are</div>
+          <h2>Your Core Identity</h2>
+          ${profile.coreIdentity}
+        </div>
+
+        <div class="section">
+          <div class="section-label">Your Daily Reality</div>
+          ${profile.dailyReality}
+        </div>
+
+        <div class="section">
+          <div class="section-label">The Voice In Your Head</div>
+          <h2>Your Inner Dialogue</h2>
+          ${profile.innerDialogue.map(d => `<div class="dialogue-item">"${d}"</div>`).join('')}
+        </div>
+
+        <div class="section">
+          <div class="section-label">Your Relationship with AI</div>
+          ${profile.aiRelationship}
+        </div>
+
+        <div class="section">
+          <div class="section-label">What's Running the Show</div>
+          <h2>Your Capacity Blocks</h2>
+          <p style="font-size: 0.9rem;">These aren't character flaws — they're old programming. Protective patterns that once kept you safe but now keep you stuck.</p>
+          ${profile.capacityBlocks.map(b => `<div class="block-item"><h3>${b.name}</h3><p>${b.description}</p></div>`).join('')}
+        </div>
+
+        <div class="section">
+          <div class="section-label">Underneath It All</div>
+          <h2>Your Secret Fear</h2>
+          <p class="pull-quote">${profile.secretFear}</p>
+          <h2>Your Secret Hope</h2>
+          <p class="pull-quote">${profile.secretHope}</p>
+        </div>
+
+        <div class="section">
+          <div class="section-label">Where You Are on the MAP</div>
+          <div class="map-text">Mindset → Aligned AI Strategy → Profitable Action</div>
+          <p class="map-desc">${profile.mapLabel}</p>
+        </div>
+
+        ${profile.miniLessons.map((lesson, i) => `
+          <div class="lesson">
+            <div class="lesson-number">Mini-Lesson ${i + 1}</div>
+            <div class="lesson-title">${lesson.title}</div>
+            ${lesson.content}
+          </div>
+        `).join('')}
+
+        <div class="section" style="text-align: center;">
+          <h2>Your Next Step</h2>
+          <p>${profile.nextStep}</p>
+        </div>
+
+        <div class="footer">
+          <p>The Clarity Code Quiz — Midlife Recalibrated</p>
+          <p>midliferecalibrated.com</p>
+        </div>
+      </body>
+      </html>
+    `;
+
+    // Open a new window and print it
+    const printWindow = window.open('', '_blank');
+    printWindow.document.write(printHTML);
+    printWindow.document.close();
+    // Wait for fonts to load before triggering print
+    printWindow.onload = function () {
+      setTimeout(() => {
+        printWindow.print();
+      }, 500);
+    };
+  });
+
+  // ============================================
+  // RESTORE RESULTS ON PAGE REFRESH
+  // ============================================
+
+  (function restoreResults() {
+    const saved = sessionStorage.getItem('clarityCodeResult');
+    if (saved) {
+      try {
+        const result = JSON.parse(saved);
+        renderResults(result);
+        showView(resultsView);
+      } catch (e) {
+        // Bad data — just show landing
+      }
+    }
+  })();
+
+  // Clear saved results when retaking
+  document.getElementById('retake-btn').addEventListener('click', function () {
+    sessionStorage.removeItem('clarityCodeResult');
   });
 
 })();
