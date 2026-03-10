@@ -269,6 +269,14 @@ h3 { font-size: 1.5rem; }
   flex-shrink: 0;
 }
 
+.map-intro-footer {
+  margin-top: 48px;
+  font-family: 'Lora', serif;
+  font-style: italic;
+  color: var(--deep-plum);
+  font-size: 1.05rem;
+}
+
 /* About / Credibility Section */
 
 .about-section {
